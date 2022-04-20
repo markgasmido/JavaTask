@@ -26,23 +26,23 @@ public class Service {
 		return new Customer(id, customerName, contactName, address, city, postalCode, country);
 	}
 
-	public CustomerSearch countrySearchFromResultSet(ResultSet resultSet,String search) throws SQLException {
+	public CustomerSearch countrySearchFromResultSet(ResultSet resultSet, String search) throws SQLException {
 		String country = resultSet.getString("country");
 		int count = resultSet.getInt("count");
-		if(count == 0) {
-			return new CustomerSearch(search,count);
+		if (count == 0) {
+			return new CustomerSearch(search, count);
 		}
 		return new CustomerSearch(country, count);
 	}
-	
-	public CustomerSearch allCountryFromResultSet(ResultSet resultSet) throws SQLException{
+
+	public CustomerSearch allCountryFromResultSet(ResultSet resultSet) throws SQLException {
 		String country = resultSet.getString("country");
 		int count = resultSet.getInt("count");
-		
+
 		return new CustomerSearch(country, count);
 	}
 
-	public List<Customer> readAll() {
+	public List<Customer> getAll() {
 		try (Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPass);
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery("SELECT * FROM customers");) {
@@ -57,7 +57,7 @@ public class Service {
 		return new ArrayList<>();
 	}
 
-	public Customer read(int id) {
+	public Customer searchId(int id) throws SQLException {
 		try (Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPass);
 				PreparedStatement statement = connection
 						.prepareStatement("SELECT * FROM customers WHERE customer_id=?");) {
@@ -66,10 +66,7 @@ public class Service {
 				resultSet.next();
 				return modelFromResultSet(resultSet);
 			}
-		} catch (Exception e) {
-			System.out.println(e);
 		}
-		return null;
 	}
 
 	public List<CustomerSearch> sortByCountry() {
@@ -91,17 +88,38 @@ public class Service {
 	public CustomerSearch sortByCustomer(String country) {
 		try (Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPass);
 				PreparedStatement statement = connection
-						.prepareStatement("SELECT country, count(*) AS count FROM customers WHERE country=?");)
-				 {
+						.prepareStatement("SELECT country, count(*) AS count FROM customers WHERE country=?");) {
 			statement.setString(1, country);
-			try (ResultSet resultSet = statement.executeQuery();){
+			try (ResultSet resultSet = statement.executeQuery();) {
 				resultSet.next();
-				return countrySearchFromResultSet(resultSet,country);
+				return countrySearchFromResultSet(resultSet, country);
 			}
-		} catch (Exception e) {
+		} catch (SQLException Se) {
+			System.out.println("No customers from that country");
+		} catch(Exception e) {
 			System.out.println(e);
 		}
 
 		return null;
+	}
+
+	public Customer searchByAddress(String address) {
+		try (Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPass);
+				PreparedStatement statement = connection
+						.prepareStatement("SELECT * FROM customers WHERE address=?");
+						) {
+			statement.setString(1, address);
+			try(ResultSet resultSet = statement.executeQuery();){
+				resultSet.next();
+				return modelFromResultSet(resultSet);
+			}
+		} catch (SQLException Se) {
+			System.out.println("No customer from that address");
+		} catch(Exception e) {
+			System.out.println(e);
+		}
+
+		return null;
+
 	}
 }
