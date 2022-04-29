@@ -27,6 +27,7 @@ public class Main {
 			response = scanner.nextLine();
 			result = service.sortByCustomer(response);
 			if(response.toLowerCase().matches("end")) {
+				System.out.println("Thank you - application closed");
 				
 			} else {
 				try {
@@ -37,7 +38,6 @@ public class Main {
 			}
 			
 		}while(!response.toLowerCase().matches(flag));
-		System.out.println("Thank you - application closed");
 
 		// task 2
 //		String flag = "end";
@@ -47,6 +47,7 @@ public class Main {
 //			System.out.println("Which country do you want to know about? - respond 'end' to close application");
 //			response = scanner.nextLine();
 //			if(response.toLowerCase().matches("end")) {
+//				System.out.println("Thank you - application closed");
 //				
 //			} else {
 //				try {
@@ -66,7 +67,6 @@ public class Main {
 //			}
 //
 //		} while (!response.toLowerCase().matches(flag));
-//		System.out.println("Thank you - application closed");
 	}
 
 }
