@@ -1,72 +1,72 @@
 package custostomercountrysearchtask;
 
-import java.util.List;
-
-import custostomercountrysearchtask.task.Customer;
 import custostomercountrysearchtask.task.CustomerSearch;
+import custostomercountrysearchtask.task.Model;
 import custostomercountrysearchtask.task.Service;
+import custostomercountrysearchtask.task.Service2;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
 
 	public static void main(String[] args) {
 		Service service = new Service();
+		Service2 service2 = new Service2();
+		Scanner scanner = new Scanner(System.in);
 
-		// select all fields from customer table
-		System.out.println();
-		System.out.println("~~~~~~~~~~Select All~~~~~~~~~~~~");
-		List<Customer> customers = service.getAll();
-		for (Customer customer : customers) {
-			try {
-				System.out.println(customer.toString());
-			} catch (Exception e) {
-				System.out.print(e);
+		// task 1
+		String flag  = "end";
+		String response = "";
+		CustomerSearch result;
+		do{
+			System.out.println("Number of customers from which country? - respond 'end' to close application");
+			response = scanner.nextLine();
+			result = service.sortByCustomer(response);
+			if(response.toLowerCase().matches("end")) {
+				
+			} else {
+				try {
+					System.out.println(result.toString());
+				} catch (Exception e) {
+					System.out.print(e);
+				}
 			}
-		}
-
-		// group by country + count
-		System.out.println();
-		System.out.println("~~~~~~~~~~Count Country~~~~~~~~~~~~");
-		List<CustomerSearch> results = service.sortByCountry();
-		for (CustomerSearch result : results) {
-			try {
-				System.out.println(result.toString());
-			} catch (Exception e) {
-				System.out.print(e);
-			}
-		}
-
-		// Select using id from customer table
-		System.out.println();
-		System.out.println("~~~~~~~~~~Select using id = 2 ~~~~~~~~~~~~");
-		Customer customer;
-		try {
-			customer = service.searchId(2);
-			System.out.println(customer.toString());
-		} catch (Exception e) {
-			System.out.println("Please Try Again");
 			
-		}
-		
-		// Select using address
-		System.out.println();
-		System.out.println("~~~~~~~~~~Select using address = Obere Str. 57 ~~~~~~~~~~~~");
-		Customer result = service.searchByAddress("Obere Str. 57");
-		try {
-			System.out.println(result.toString());
-		} catch (Exception e) {
-			System.out.println("Please try again");
-		}
-		
-		// task
-		System.out.println();
-		System.out.println("~~~~~~~~~~Task~~~~~~~~~~~~");
-		CustomerSearch result2 = service.sortByCustomer("UK");
-		try {
-			System.out.println(result2.toString());
-		} catch (Exception e) {
-			System.out.print(e);
-		}
+		}while(!response.toLowerCase().matches(flag));
+		System.out.println("Thank you - application closed");
 
+		// task 2
+//		String flag = "end";
+//		String response = "";
+//		List<Model> result;
+//		do {
+//			System.out.println("Which country do you want to know about? - respond 'end' to close application");
+//			response = scanner.nextLine();
+//			if(response.toLowerCase().matches("end")) {
+//				
+//			} else {
+//				try {
+//					result = service2.searchUsingCountry(response);
+//					Set<String> stateSet = new HashSet<>();
+//					Set<String> citySet = new HashSet<>();
+//					
+//					for(Model model : result) {
+//						stateSet.add(model.getState());
+//						citySet.add(model.getCity());
+//					}
+//					System.out.println(response+" having " + stateSet.size() + " states and " + citySet.size() + " cities");
+//					
+//				}catch(Exception e) {
+//					System.out.println(e);
+//				}
+//			}
+//
+//		} while (!response.toLowerCase().matches(flag));
+//		System.out.println("Thank you - application closed");
 	}
 
 }
